@@ -9,6 +9,7 @@ An interactive python program which analyses bikeshare data from Washington, Chi
 Users can generate summary statistics on bikeshare usage for chosen times and cities.
 
 The statistics include:
+*number of users
 *gender of bikeshare customers
 *travel times
   *common start times
