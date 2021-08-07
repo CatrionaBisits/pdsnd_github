@@ -7,7 +7,16 @@ import datetime
 CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
+#Function to convert month string to month number
+def month_to_num(month):
+    months = ['january', 'february', 'march', 'april', 'may', 'june']
+    return months.index(month) + 1
 
+# Function to convert month number to month string
+def num_to_month(month_num):
+    months = ['january', 'february', 'march', 'april', 'may', 'june']
+    month_num -= 1
+    return months[month_num]
 
 # Function to identify count of user types
 def load_data(city, month, day):
@@ -28,9 +37,8 @@ def load_data(city, month, day):
         # Convert month to lower case
         month = month.lower()
         if month != 'all':
-            # Use the index of the months list to get the corresponding int
-            months = ['january', 'february', 'march', 'april', 'may', 'june']
-            month = months.index(month) + 1
+            # Convert to month index and extract month data
+            month = month_to_num(month)
             df = df[df['Month'] == month]
 
         # Filter by day of week if applicable
@@ -149,9 +157,8 @@ def popular_times(df, city, month, day):
     print('\nWhat are the most popular times for bikeshare travel?')
     #Find popular month:
     if month == 'all':
-        months = ['january', 'february', 'march', 'april', 'may', 'june']
         popular_month = df['Month'].mode()[0]
-        popular_month = months[popular_month - 1].title()
+        popular_month = num_to_month(popular_month).title()
         print('The most popular month in {} is: {}.'.format(city, popular_month))
     #Find popular day:
     if day == 'all':
