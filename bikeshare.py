@@ -7,16 +7,18 @@ import datetime
 CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
+
+months_list = ['january', 'february', 'march', 'april', 'may', 'june']
+
+
 #Function to convert month string to month number
 def month_to_num(month):
-    months = ['january', 'february', 'march', 'april', 'may', 'june']
-    return months.index(month) + 1
+    return months_list.index(month) + 1
 
 # Function to convert month number to month string
 def num_to_month(month_num):
-    months = ['january', 'february', 'march', 'april', 'may', 'june']
     month_num -= 1
-    return months[month_num]
+    return months_list[month_num]
 
 # Function to identify count of user types
 def load_data(city, month, day):
@@ -77,8 +79,7 @@ def choose_month():
                     try:
                         user_input = input('Enter a month (January to June): ')
                         user_input = user_input.lower()
-                        months = ['january', 'february', 'march', 'april', 'may', 'june']
-                        if user_input in months:
+                        if user_input in months_list:
                             month = user_input
                             return month
                             break
