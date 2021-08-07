@@ -8,6 +8,17 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
 
+months_list = ['january', 'february', 'march', 'april', 'may', 'june']
+
+
+#Function to convert month string to month number
+def month_to_num(month):
+    return months_list.index(month) + 1
+
+# Function to convert month number to month string
+def num_to_month(month_num):
+    month_num -= 1
+    return months_list[month_num]
 
 # Function to identify count of user types
 def load_data(city, month, day):
@@ -28,9 +39,8 @@ def load_data(city, month, day):
         # Convert month to lower case
         month = month.lower()
         if month != 'all':
-            # Use the index of the months list to get the corresponding int
-            months = ['january', 'february', 'march', 'april', 'may', 'june']
-            month = months.index(month) + 1
+            # Convert to month index and extract month data
+            month = month_to_num(month)
             df = df[df['Month'] == month]
 
         # Filter by day of week if applicable
@@ -69,8 +79,7 @@ def choose_month():
                     try:
                         user_input = input('Enter a month (January to June): ')
                         user_input = user_input.lower()
-                        months = ['january', 'february', 'march', 'april', 'may', 'june']
-                        if user_input in months:
+                        if user_input in months_list:
                             month = user_input
                             return month
                             break
@@ -149,9 +158,8 @@ def popular_times(df, city, month, day):
     print('\nWhat are the most popular times for bikeshare travel?')
     #Find popular month:
     if month == 'all':
-        months = ['january', 'february', 'march', 'april', 'may', 'june']
         popular_month = df['Month'].mode()[0]
-        popular_month = months[popular_month - 1].title()
+        popular_month = num_to_month(popular_month).title()
         print('The most popular month in {} is: {}.'.format(city, popular_month))
     #Find popular day:
     if day == 'all':
@@ -179,12 +187,11 @@ def popular_journey(df):
     popular_journey = df['Journey'].mode()[0]
     print('The most popular journey is {}.'.format(popular_journey))
 
-# Function to find the total travel time
-# "Total travel time" interpreted to be sum of all journey durations in df
-def total_travel(df):
-    total_travel = sum(df['Trip Duration'])
-    tot_weeks = total_travel // 604800
-    remainder = total_travel % 604800
+# Function to break up a number of seconds into largest possible time units
+# Returns either with weeks as largest unit, or minutes as largest unit
+def seconds_into_time(num_seconds,biggest_unit):
+    tot_weeks = num_seconds // 604800
+    remainder = num_seconds % 604800
     tot_days = remainder // 86400
     remainder = remainder % 86400
     tot_hours = remainder // 3600
@@ -192,18 +199,22 @@ def total_travel(df):
     tot_min = remainder // 60
     remainder = remainder % 60
     tot_sec = int(remainder)
-    tot_travel = '{} week(s), {} days(s), {} hour(s), {} minute(s) and {} second(s)'.format(tot_weeks, tot_days, tot_hours, tot_min, tot_sec)
-    print('\nTotal travel time is {}.'.format(tot_travel))
+    if biggest_unit == 'weeks_biggest':
+        return '{} week(s), {} days(s), {} hour(s), {} minute(s) and {} second(s)'.format(tot_weeks, tot_days, tot_hours, tot_min, tot_sec)
+    elif biggest_unit == 'min_biggest':
+        return '{} minute(s) and {} second(s)'.format(tot_min, tot_sec)
+
+# Function to find the total travel time
+# "Total travel time" interpreted to be sum of all journey durations in df
+def total_travel(df):
+    total_travel = sum(df['Trip Duration'])
+    total_travel = seconds_into_time(total_travel, 'weeks_biggest')
+    print('\nTotal travel time is {}.'.format(total_travel))
 
 # Function to find mean trip duration
 def avg_travel(df):
     avg_travel = df['Trip Duration'].mean()
-    avg_hours = avg_travel // 3600
-    remainder = avg_travel % 3600
-    avg_min = remainder // 60
-    remainder = remainder % 60
-    avg_sec = int(remainder)
-    avg_travel = '{} hour(s), {} minute(s), {} second(s)'.format(int(avg_hours), int(avg_min), avg_sec)
+    avg_travel = seconds_into_time(avg_travel, 'min_biggest')
     print('\nAverage trip duration is {}.'.format(avg_travel))
 
 # Function to count user types
