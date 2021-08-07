@@ -8,6 +8,19 @@
 An interactive python program which analyses bikeshare data from Washington, Chicago and New York City.
 Users can generate summary statistics on bikeshare usage for chosen times and cities.
 
+The statistics include:
+*gender of bikeshare customers
+*travel times
+  *common start times
+  *most common day of the week travelled
+  *average journey length in minutes and seconds
+  *total time spent travelling by all users
+*most common journey (start station to end station)
+*birth year
+  *most common birth year
+  *most recent birth year
+  *earliest birth year
+
 ### Files used
 *Program*
 bikeshare.py
